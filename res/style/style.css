@@ -1,0 +1,20 @@
+/* dark mode */
+/*
+body {
+    color: #e8e6e3;
+    background-color: #131516;
+}*/
+
+a:link {
+    color: #1484F0;
+}
+
+a:visited {
+    color: #1484F0;
+}
+
+.center {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
