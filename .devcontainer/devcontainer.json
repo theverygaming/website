@@ -1,0 +1,14 @@
+{
+	"name": "Debian",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Gruntfuggly.todo-tree",
+				"tommorris.mako"
+			]
+		}
+	}
+}

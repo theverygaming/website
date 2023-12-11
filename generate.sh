@@ -8,11 +8,17 @@ FILES=(
 
 rm -rf out
 
-for file in ${FILES[@]}
-do
-    echo generating $file
-    mkdir -p $(dirname out/${file})
-    mako-render --template-dir "./" src/${file} --output-file out/${file}
-done
+function gen_design() {
+    for file in ${FILES[@]}
+    do
+        echo generating ${file} for design ${1}
+        mkdir -p $(dirname out/${2}/${file})
+        mako-render --var "design=${1}" --template-dir "./" src/${file} --output-file out/${2}/${file}
+    done
+}
+
+gen_design "90s" "90s"
+gen_design "00s" "00s"
 
 rsync -a res/ out/
+find ./out -name *.html | xargs tidy -quiet -indent --tidy-mark no -m 

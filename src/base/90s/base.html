@@ -8,10 +8,12 @@
 </head>
 
 <body>
-  <div id="header">
+  <div id="navbar">
     <div class="center">
-      <%include file="header.html"/>
-      <%block name="header"/>
+      <a href="<%block name="basepath"/>index.html">[home]</a>
+      <a href="${self.basepath()}socials.html">[socials]</a>
+      <a href="${self.basepath()}posts">[blog]</a>
+      <%block name="navbar"/>
     </div>
     <hr style="width:90%;">
   </div>
