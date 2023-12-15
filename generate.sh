@@ -5,6 +5,7 @@ FILES=(
     "socials.html"
     "posts/index.html"
 )
+DEFAULT_DESIGN="90s"
 
 rm -rf out
 
@@ -21,4 +22,7 @@ gen_design "90s" "90s"
 gen_design "00s" "00s"
 
 rsync -a res/ out/
-find ./out -name *.html | xargs tidy -quiet -indent --tidy-mark no -m 
+find ./out -name *.html | xargs tidy -quiet -indent --tidy-mark no -m
+
+mv out/${DEFAULT_DESIGN}/* out/
+rmdir out/${DEFAULT_DESIGN}

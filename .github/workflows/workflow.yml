@@ -9,8 +9,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y rsync python3 python3-pip tidy
-          pip install Mako
+          sudo apt-get install -y rsync python3-mako tidy
 
       - name: generate
         run: |
