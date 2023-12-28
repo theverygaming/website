@@ -2,10 +2,9 @@
 set -e
 FILES=(
     "index.html"
-    "socials.html"
     "posts/index.html"
 )
-DEFAULT_DESIGN="90s"
+DEFAULT_DESIGN="modern"
 
 rm -rf out
 
@@ -19,10 +18,10 @@ function gen_design() {
 }
 
 gen_design "90s" "90s"
-gen_design "00s" "00s"
+gen_design "modern" "modern"
 
 rsync -a res/ out/
-find ./out -name *.html | xargs tidy -quiet -indent --tidy-mark no -m
+find ./out -name *.html | xargs tidy -quiet -indent --tidy-mark no --drop-empty-elements no -m
 
 mv out/${DEFAULT_DESIGN}/* out/
 rmdir out/${DEFAULT_DESIGN}

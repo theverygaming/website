@@ -1,0 +1,152 @@
+:root {
+    --background-color: rgba(0, 0, 0, .75);
+    --shadow-color: mediumpurple;
+    --primary-color: purple;
+    --border-radius: 5px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a:link {
+    color: #1484F0;
+}
+
+a:visited {
+    color: #1484F0;
+}
+
+.btn {
+    background: transparent;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid var(--primary-color);
+}
+
+.btn:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+
+a.btn {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    margin: 1px;
+}
+
+
+body {
+    background-image: url(/img/bg.webp);
+    background-size: cover;
+    background-position: 43% 25%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: black;
+
+    font-family: Ubuntu, Arial, Helvetica, sans-serif;
+}
+
+#navbar {
+    line-height: 0;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+#navbar>ul {
+    list-style: none;
+    display: inline-block;
+    padding: 0;
+    line-height: 1;
+}
+
+#navbar>ul>li>a {
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+    cursor: pointer;
+    color: white;
+}
+
+#navbar>ul>li {
+    float: left;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-color);
+    margin: 1px;
+}
+
+#navbar>ul>li:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+
+#navbar_show,
+#navbar_show_label {
+    display: none;
+}
+
+@media only screen and (max-width: 599px) {
+
+    #navbar_show_label {
+        display: inline-block;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+    }
+
+    #navbar>ul {
+        display: none;
+    }
+
+    #navbar>ul>li {
+        float: none;
+        border: none;
+    }
+
+    #navbar>ul>li:not(:last-child) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: 1px solid var(--primary-color);
+    }
+
+    #navbar_show:checked~ul {
+        display: inline-block;
+        position: absolute;
+        top: 50px;
+        right: 10px;
+        min-width: 200px;
+        margin-top: 0;
+        background-color: var(--background-color);
+        box-shadow: 0 0 3px 3px var(--shadow-color);
+        border-radius: var(--border-radius);
+        z-index: 100;
+    }
+
+    #navbar {
+        border-bottom: none;
+    }
+}
+
+#content-wrapper {
+    margin-top: 5%;
+}
+
+#content {
+    /* inside content */
+    text-align: center;
+
+    /* colors */
+    background: var(--background-color);
+    color: white;
+
+    /* size & position */
+    max-width: 1024px;
+    margin: 0 auto;
+    min-height: 500px;
+    padding: 0px 20px 20px;
+    position: relative;
+
+    /* border */
+    border-radius: 10px;
+    box-shadow: 0 0 10px 5px var(--shadow-color);
+    border: 1px solid var(--primary-color);
+}

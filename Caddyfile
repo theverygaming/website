@@ -1,0 +1,14 @@
+{
+  admin off
+}
+
+
+:8080 {
+	file_server {
+		browse
+	}
+	root * out/
+	header {
+		Cache-Control: "no-store"
+	}
+}
