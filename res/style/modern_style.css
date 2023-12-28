@@ -51,6 +51,7 @@ body {
 #navbar {
     line-height: 0;
     border-bottom: 1px solid var(--primary-color);
+    width: 100%;
 }
 
 #navbar>ul {
@@ -132,6 +133,10 @@ body {
 
 #content {
     /* inside content */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     text-align: center;
 
     /* colors */

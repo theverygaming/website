@@ -12,7 +12,6 @@
 <body>
   <div id="content-wrapper">
     <div id="content">
-      <br>
       <nav id="navbar">
         <input id="navbar_show" type="checkbox">
         <label for="navbar_show" id="navbar_show_label">
@@ -31,7 +30,8 @@
       <div>
         ${self.body()}
       </div>
-      <div id="footer" style="position: absolute; bottom: 20px; width: calc(100% - (2 * 20px));">
+      <div id="footer" style="margin-top: auto; width: 100%;">
+        <br>
         <div style="margin: auto; border-top: 1px solid var(--primary-color); ">
           <br>
           <%include file="footer.html"/>
