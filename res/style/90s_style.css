@@ -1,16 +1,15 @@
-/* dark mode */
-/*
-body {
-    color: #e8e6e3;
-    background-color: #131516;
-}*/
-
 a:link {
     color: #1484F0;
 }
 
 a:visited {
     color: #1484F0;
+}
+
+ul {
+    display: inline-block;
+    padding-left: 0;
+    text-align: left;
 }
 
 .center {

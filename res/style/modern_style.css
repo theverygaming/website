@@ -134,6 +134,7 @@ body {
 #content {
     /* inside content */
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;

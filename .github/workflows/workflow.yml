@@ -9,7 +9,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y rsync python3-mako tidy
+          sudo apt-get install -y rsync python3-mako tidy codespell
 
       - name: generate
         run: |

@@ -2,9 +2,13 @@
 set -e
 FILES=(
     "index.html"
+    "projects/index.html"
+    "projects/funnyarch.html"
     "posts/index.html"
 )
 DEFAULT_DESIGN="modern"
+
+codespell -q 3 -S ./.git --builtin clear,rare,informal,usage,names
 
 rm -rf out
 
