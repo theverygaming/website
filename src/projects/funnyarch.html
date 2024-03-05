@@ -17,6 +17,7 @@
 <p>Try writing some pixels to the screen with the machine code monitor! The 1bpp framebuffer is located at 0xF0000000 and has a resolution of 640x480 pixels.</p>
 
 <script>
+    let serialcon_ref = null;
     let computer_ref = null;
     let computer_running = false;
     let computer_stopped_running = true;
@@ -30,11 +31,16 @@
             setTimeout(() => {reinit_computer(romArray);}, 50);
             return;
         }
-        const serialcon = new textAreaSerialConsole(document.getElementById("serialTextArea"), (str) => {
+        if(serialcon_ref != null) {
+            serialcon_ref.destroy();
+            serialcon_ref = null;
+        }
+
+        serialcon_ref = new textAreaSerialConsole(document.getElementById("serialTextArea"), (str) => {
             computer.serialIn(str);
         });
 
-        const computer = new funnyarchComputer(romArray, new Uint8Array(4096), serialcon.addText.bind(serialcon), document.getElementById("screen"));
+        const computer = new funnyarchComputer(romArray, new Uint8Array(4096), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"));
         computer_ref = computer;
 
         function runPuter() {
