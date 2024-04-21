@@ -20,3 +20,5 @@ I do lots of silly things in my free time :3 - low level programming stuff, radi
   - I especially like the very high and very low ends of the radio spectrum, VLF and Optical comms.
 - **Electronics**
   - Goes together with the radio stuff pretty much.
+
+_"you are on a different level of nerd shit i haven't seen before"_ - veast
