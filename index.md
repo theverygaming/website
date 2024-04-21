@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Home
-permalink: /
+permalink: /index.html
 nav_order: 0
 ---
 Hi hello! People usually call me M. I go by he/they and am 19 years old.

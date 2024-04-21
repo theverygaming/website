@@ -8,3 +8,6 @@ plugins:
 
 exclude:
   - shell.nix
+  - serve.sh
+  - README.md
+  - LICENSE

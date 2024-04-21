@@ -1,7 +1,7 @@
 ---
 layout: postlist
 title: Blog
-permalink: /blog
+permalink: /blog.html
 nav_order: 1
 ---
 
