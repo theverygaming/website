@@ -1,0 +1,10 @@
+title: theverygaming
+description: ehehehehehehe,,,
+baseurl: ""
+url: ""
+
+plugins:
+  - jekyll-feed
+
+exclude:
+  - shell.nix

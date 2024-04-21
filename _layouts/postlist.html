@@ -1,0 +1,36 @@
+---
+layout: page
+---
+
+{{ content }}
+
+{%- if site.posts.size > 0 -%}
+<style>
+    .post-list {
+        list-style: none;
+        margin-left: 0em;
+    }
+
+    .post-metadata {
+        font-size: 0.9em;
+        color: var(--secondary-color);
+    }
+
+    .post-title {
+        display: block;
+        margin-top: 0.1em;
+    }
+</style>
+{%- for post in site.posts -%}
+<ul class="post-list">
+    <li>
+        <span class="post-metadata">{{ post.date | date: "%b %-d, %Y" }}</span>
+        <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">
+                {{ post.title | escape }}
+            </a>
+        </h3>
+    </li>
+</ul>
+{%- endfor -%}
+{%- endif -%}

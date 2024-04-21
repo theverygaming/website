@@ -1,0 +1,86 @@
+:root {
+    --background-color: rgba(0, 0, 0, .75);
+    --shadow-color: mediumpurple;
+    --primary-color: purple;
+    --secondary-color: mediumpurple;
+    --border-radius: 5px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a:link {
+    color: #1484F0;
+}
+
+a:visited {
+    color: #1484F0;
+}
+
+.btn {
+    background: transparent;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid var(--primary-color);
+}
+
+.btn:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+
+a.btn {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    margin: 1px;
+}
+
+body {
+    background-image: url(/assets/img/bg.webp);
+    background-size: cover;
+    background-position: 43% 40%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: black;
+
+    font-family: Ubuntu, Arial, Helvetica, sans-serif;
+}
+
+#content-wrapper {
+    margin-top: 1%;
+}
+
+#content {
+    /* inside content */
+    display: flex;
+    //flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    word-wrap: break-word;
+    //align-items: center;
+    //text-align: center;
+
+    /* colors */
+    background: var(--background-color);
+    color: white;
+
+    /* size & position */
+    max-width: 1024px;
+    margin: 0 auto;
+    min-height: 500px;
+    padding: 0px 20px 20px;
+    position: relative;
+
+    /* border */
+    border-radius: 10px;
+    box-shadow: 0 0 10px 5px var(--shadow-color);
+    border: 1px solid var(--primary-color);
+}
+
+// TODO: move to other file
+.center {
+    align-items: center;
+    text-align: center;
+}

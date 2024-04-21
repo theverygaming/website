@@ -1,0 +1,113 @@
+---
+title: Funnyarch
+layout: page
+nonav: True
+---
+
+<script src="/assets/funnyarch/cpu.js"></script>
+<script src="/assets/funnyarch/computer.js"></script>
+<script src="/assets/funnyarch/serialcon.js"></script>
+
+<p>Funnyarch is a fantasy computer with a custom RISC CPU Architecture. <a href="https://github.com/theverygaming/funnyarch">Take a look at the code on GitHub</a>. View the docs on the CPU <a href="https://github.com/theverygaming/funnyarch/blob/main/doc/cpu.md">here</a>.</p>
+
+<h2>Funnyarch Javascript emulator</h2>
+
+<p>There are two prebuilt ROM's available. A machine code monitor - usage docs <a href="https://github.com/theverygaming/funnyarch/blob/main/asm/monitor/doc.md">here</a> and docs on memory mapped hardware <a href="https://github.com/theverygaming/funnyarch/blob/main/doc/computer.md">here</a> and a CPU test suite. You can also upload your own ROM files (they must be at most 8192 bytes in size) and the emulator will execute them.</p>
+
+<p>Try writing some pixels to the screen with the machine code monitor! The 1bpp framebuffer is located at 0xF0000000 and has a resolution of 640x480 pixels.</p>
+
+<script>
+    let serialcon_ref = null;
+    let computer_ref = null;
+    let computer_running = false;
+    let computer_stopped_running = true;
+
+    function reinit_computer(romArray) {
+        if(computer_running) {
+            computer_stopped_running = false;
+            computer_running = false;
+        }
+        if(!computer_stopped_running) {
+            setTimeout(() => {reinit_computer(romArray);}, 50);
+            return;
+        }
+        if(serialcon_ref != null) {
+            serialcon_ref.destroy();
+            serialcon_ref = null;
+        }
+
+        serialcon_ref = new textAreaSerialConsole(document.getElementById("serialTextArea"), (str) => {
+            computer.serialIn(str);
+        });
+
+        const computer = new funnyarchComputer(romArray, new Uint8Array(4096), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"));
+        computer_ref = computer;
+
+        function runPuter() {
+            computer.run(10000);
+            if(computer_running) {
+                window.requestAnimationFrame(runPuter);
+            } else {
+                computer_stopped_running = true;
+            }
+        }
+
+        computer_running = true;
+        window.requestAnimationFrame(runPuter);
+    }
+
+    window.onload = function () {
+        fetch('/assets/funnyarch/roms/monitor.bin')
+            .then(response => response.arrayBuffer())
+            .then((rawdata) => {
+                let rom = new Uint8Array(8192);
+                rom.set(new Uint8Array(rawdata));
+                reinit_computer(rom);
+            }
+        );
+    }
+
+    function load_rom(filepath) {
+        fetch(filepath)
+            .then(response => response.arrayBuffer())
+            .then((rawdata) => {
+                let rom = new Uint8Array(8192);
+                rom.set(new Uint8Array(rawdata));
+                reinit_computer(rom);
+            }
+        );
+    }
+
+    function rom_file_selected(file) {
+        file.arrayBuffer().then(function(arr) {
+            arrU8 = new Uint8Array(arr);
+            if (arrU8.length > 8192) {
+                alert("the file you selected is too large for a funnyarch ROM");
+                return;
+            }
+            let rom = new Uint8Array(8192);
+            rom.set(new Uint8Array(arrU8));
+            reinit_computer(rom);
+        });
+    }
+</script>
+
+<div class="center">
+    <button onclick="computer_ref.cpu.reset()">Reset CPU</button>
+    <br>
+
+    <label for="roms_select">ROM: </label>
+    <select id="roms_select" onchange="load_rom(this.value)">
+        <option selected="selected" value="/assets/funnyarch/roms/monitor.bin">Machine Code Monitor</option>
+        <option value="/assets/funnyarch/roms/testsuite.bin">Test Suite</option>
+    </select>
+    <label for="roms_file_upload">or upload a ROM file</label>
+    <input id="roms_file_upload" type="file" onchange="rom_file_selected(this.files[0])"/>
+
+    <h3>Serial console</h3>
+    <textarea id="serialTextArea"
+        style="font-family: Unifont, monospace; background-color: black; color: white; width: 100%; max-width: 640px; height: 480px;"></textarea>
+    <br>
+    <h3>Screen</h3>
+    <canvas id="screen" width="640" height="480" style="border: 1px solid grey; height: auto; max-width: 100%;"></canvas>
+</div>

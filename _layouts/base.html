@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+    <head>
+        {%- include head.html -%}
+    </head>
+    <body>
+        <div id="content-wrapper">
+            <a class="center" style="color: white;" href="{{ "/" | relative_url }}"><h1>{{ site.title | escape }}</h1></a>
+            <div id="content">
+                <header>
+                    {%- include header.html -%}
+                </header>
+
+                <main>
+                    {{ content }}
+                </main>
+
+                <footer class="center" style="margin-top: auto; border-top: 1px solid var(--primary-color);">
+                    {%- include footer.html -%}
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>

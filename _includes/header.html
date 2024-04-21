@@ -1,0 +1,18 @@
+<nav id="navbar" class="center">
+    <input id="navbar_show" type="checkbox">
+    <label for="navbar_show" id="navbar_show_label">
+      <i class="bx bx-menu" style="font-size: 2em;"></i>
+    </label>
+    <ul>
+    {%- assign pages_sorted = site.pages | sort_natural: "nav_order" -%}
+    {%- for page in pages_sorted -%}
+        {%- if page.title -%}
+        {%- unless page.nonav -%}
+        <li>
+            <a href="{{ page.url | relative_url }}">{{ page.title | escape }}</a>
+        </li>
+        {%- endunless -%}
+        {%- endif -%}
+    {%- endfor -%}
+    </ul>
+</nav>

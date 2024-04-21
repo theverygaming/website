@@ -1,0 +1,11 @@
+---
+layout: base
+---
+
+<article>
+    <header>
+        <h1 class="center">{{ page.title | escape }}</h1>
+        <time style="color: var(--secondary-color);" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+    </header>
+    {{ content }}
+</article>

@@ -1,0 +1,16 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="origin">
+<meta name="darkreader-lock" content="">
+<link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+<!-- TODO: don't rely on unpkg -->
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+{%- if page.collectionpage -%}
+{%- assign collection = site.collections | where: "label", page.collectionpage | first -%}
+<title>{{ collection.title }} - {{ site.title }}</title>
+{%- elsif page.title -%}
+<title>{{ page.title }} - {{ site.title }}</title>
+{%- else -%}
+<title>{{ site.title }}</title>
+{%- endif -%}
