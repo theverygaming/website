@@ -78,9 +78,13 @@ nonav: True
         );
     }
 
-    function rom_file_selected(file) {
-        file.arrayBuffer().then(function(arr) {
-            arrU8 = new Uint8Array(arr);
+    function rom_file_selected() {
+        if (!this.files.length) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function() {
+            arrU8 = new Uint8Array(this.result);
             if (arrU8.length > 8192) {
                 alert("the file you selected is too large for a funnyarch ROM");
                 return;
@@ -88,7 +92,8 @@ nonav: True
             let rom = new Uint8Array(8192);
             rom.set(new Uint8Array(arrU8));
             reinit_computer(rom);
-        });
+        };
+        reader.readAsArrayBuffer(this.files[0]);
     }
 </script>
 
@@ -100,9 +105,11 @@ nonav: True
     <select id="roms_select" onchange="load_rom(this.value)">
         <option selected="selected" value="/assets/funnyarch/roms/monitor.bin">Machine Code Monitor</option>
         <option value="/assets/funnyarch/roms/testsuite.bin">Test Suite</option>
+        <option value="/assets/funnyarch/roms/mandelbrot.bin">Mandelbrot (slow)</option>
+        <option value="/assets/funnyarch/roms/bios.bin">BIOS (no HDD, can't boot from it)</option>
     </select>
     <label for="roms_file_upload">or upload a ROM file</label>
-    <input id="roms_file_upload" type="file" onchange="rom_file_selected(this.files[0])"/>
+    <input id="roms_file_upload" type="file" onchange="rom_file_selected.bind(this)()"/>
 
     <h3>Serial console</h3>
     <textarea id="serialTextArea"
