@@ -1,0 +1,17 @@
+
+<svg width="88" height="31" version="1.1" viewBox="0 0 88 31" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="clip"><rect id="half" width="44" height="31" shape-rendering="crispEdges"/></clipPath></defs><g id="bi" shape-rendering="crispEdges">
+    <path id="bi-3" d="m0 0h88v31h-88z" fill="#0038a8"/>
+    <path id="bi-2" d="m0 0h88v19h-88z" fill="#9b4f96"/>
+    <path id="bi-1" d="m0 0h88v12h-88z" fill="#d60270"/>
+</g><g id="trans" shape-rendering="crispEdges" clip-path="url(#clip)">
+    <path id="trans-5" d="m0 0h88v31h-88z" fill="#5bcefa"/>
+    <path id="trans-4" d="m0 0h88v25h-88z" fill="#f5a9b8"/>
+    <path id="trans-3" d="m0 0h88v19h-88z" fill="#fff"/>
+    <path id="trans-2" d="m0 0h88v12h-88z" fill="#f5a9b8"/>
+    <path id="trans-1" d="m0 0h88v6h-88z" fill="#5bcefa"/>
+</g><g id="outset-double" shape-rendering="crispEdges">
+    <path id="outset-double-4" d="m0 6e-8h2v29l-2 2zm0 0 44-6e-8 -2 2-42 1e-7z" fill="#fff" fill-opacity=".66667"/>
+    <path id="outset-double-3" d="m44 0h2v29l-2 2zm0 0 44.1-1e-7 -2 2-42 1e-7z" fill="#fff" fill-opacity=".66667"/>
+    <path id="outset-double-2" d="m86 2 2-2v31h-2zm-40 27h42v2h-44z" fill="#000" fill-opacity=".66667"/>
+    <path id="outset-double-1" d="m42 2 2-2v31h-2zm-40 27h42v2h-44z" fill="#000" fill-opacity=".66667"/>
+</g></svg>

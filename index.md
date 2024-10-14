@@ -4,7 +4,7 @@ title: Home
 permalink: /index.html
 nav_order: 0
 ---
-Hi hello! People usually call me M. I go by she/they and am 19 years old.
+Hi hello! People usually call me M. I go by she/they and am 20 years old.
 
 I do lots of silly things in my free time :3 - I mainly dabble with computers, do radio stuff, and some electronics (although I'm terrible at electronics).
 
@@ -27,5 +27,9 @@ I do lots of silly things in my free time :3 - I mainly dabble with computers, d
   - I chase Radiosondes (and you should too!) <!-- TODO: link to some nice blog post about that -->
 - **Electronics**
   - I make attempts at building some circuits sometimes, but usually fail
+
+Sometimes i play games too (usually whenever I'm demotivated and not feeling like doing anything productive), like 90% of the time it's Counter-Strike 2 though. And I'm not even good at it.
+
+Also even more rarely i watch Anime :3
 
 _"you are on a different level of nerd shit i haven't seen before"_ - veast

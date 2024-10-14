@@ -1,6 +1,9 @@
 - link: https://xenia-linux-site.glitch.me/
   image: /assets/img/buttons/poweredbylinux_xenia.png
   alt: "88x31 button: powered by Linux (with Xenia :3 instead of Tux)"
+- link: https://kernel.org/
+  image: /assets/img/buttons/madeonlinux.png
+  alt: "88x31 button: Made on GNU/Linux, with image of Tux"
 - link: https://archlinux.org/
   image: /assets/img/buttons/archlinux.gif
   alt: "88x31 button: Arch Linux"
@@ -11,6 +14,9 @@
   alt: "88x31 button: free Microsoft Internet Exploder"
 - image: /assets/img/buttons/msbad.jpg
   alt: "88x31 button: i hate Microsoft"
+- link: https://badge.les.bi/
+  image: /assets/img/buttons/trans-bi.svg
+  alt: "88x31 button: Trans and Bisexual pride flags"
 - link: http://validator.w3.org/check?uri=referer
   image: /assets/img/buttons/valid-html401.png
   alt: "88x31 button: Valid HTML 4.01 Transitional"
