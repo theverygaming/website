@@ -17,6 +17,9 @@
 - link: https://badge.les.bi/
   image: /assets/img/buttons/trans-bi.svg
   alt: "88x31 button: Trans and Bisexual pride flags"
+- link: https://www.netdeneb.com/
+  image: /assets/img/buttons/deneb_amber.gif
+  alt: "88x31 button: CRT style button with art of deneb biting into a laptop"
 - link: http://validator.w3.org/check?uri=referer
   image: /assets/img/buttons/valid-html401.png
   alt: "88x31 button: Valid HTML 4.01 Transitional"
