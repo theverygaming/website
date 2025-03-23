@@ -23,7 +23,7 @@ I do lots of silly things in my free time :3 - I mainly dabble with computers, d
   - PHP (didn't touch it in years either)
 - **Radio Stuff**
   - VLF (mainly stuff below 8.3kHz)
-  - Optical - literally light - sadly it's a little hard to find people to have a contact with at those Frequencies
+  - Optical - literally light - sadly it's a little hard to find people to have a QSO with at those frequencies
   - I chase Radiosondes (and you should too!) <!-- TODO: link to some nice blog post about that -->
 - **Electronics**
   - I make attempts at building some circuits sometimes, but usually fail
