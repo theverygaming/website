@@ -4,7 +4,7 @@ title: Home
 permalink: /index.html
 nav_order: 0
 ---
-Hi hello! People usually call me M. I go by she/they and am 20 years old.
+Hi hello! People usually call me M [(pronounced /'ɛm/)](https://en.wikipedia.org/wiki/File:LL-Q1860_(eng)-Flame,_not_lame-M.wav). I go by she/they and am 20 years old.
 
 I do lots of silly things in my free time :3 - I mainly dabble with computers, do radio stuff, and some electronics (although I'm terrible at electronics).
 
@@ -24,7 +24,7 @@ I do lots of silly things in my free time :3 - I mainly dabble with computers, d
 - **Radio Stuff**
   - VLF (mainly stuff below 8.3kHz)
   - Optical - literally light - sadly it's a little hard to find people to have a QSO with at those frequencies
-  - I chase Radiosondes (and you should too!) <!-- TODO: link to some nice blog post about that -->
+  - I chase/retrieve radiosondes (and you should too!) - see [a talk about it](https://www.youtube.com/watch?v=YBy-bXEWZeM)
 - **Electronics**
   - I make attempts at building some circuits sometimes, but usually fail
 
