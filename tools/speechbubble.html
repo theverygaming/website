@@ -1,0 +1,97 @@
+---
+title: Speech bubble meme creator
+layout: page
+nonav: True
+---
+
+<script src="/assets/speechbubble/speechbubble.js"></script>
+
+<script>
+    let speechbubble = undefined;
+    window.onload = function () {
+        speechbubble = new SpeechBubbleThingy(document.getElementById("preview"));
+        createParamInputs();
+    }
+
+    function onSelectImage() {
+        if (this.files.length != 1) {
+            return;
+        }
+        speechbubble.loadImage(URL.createObjectURL(this.files[0]), () => {
+            createParamInputs();
+        });
+    }
+
+    function createParamInputs() {
+        const container = document.getElementById("params");
+        container.innerHTML = "";
+
+        for (const [k, v] of Object.entries(speechbubble.getParams())) {
+            const label = document.createElement("label");
+            label.textContent = v.name;
+            label.htmlFor = k;
+            label.style.display = "block";
+
+            const input = document.createElement("input");
+            input.type = v.type;
+            input.id = "pin_" + k;
+            input.name = k;
+            input.style.width = "90%";
+
+            for (const [attr, val] of Object.entries(v)) {
+                if (["name", "type"].includes(attr)) continue;
+                input.setAttribute(attr, val);
+            }
+
+            const inpev = () => {
+                speechbubble.setParams({
+                    [k]: parseFloat(input.value),
+                });
+            };
+
+            input.addEventListener("input", inpev);
+            // trigger the input event once to ensure values are set in the speechbubble class
+            inpev();
+
+            container.appendChild(label);
+            container.appendChild(input);
+        }
+    }
+
+    function doExport(op) {
+        const canvas = speechbubble.getCanvas();
+        if (op == "dl") {
+            // silly, but sure ig lmfao
+            // https://stackoverflow.com/a/15832662
+            let link = document.createElement("a");
+            link.download = name;
+            link.href = canvas.toDataURL("image/gif");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            delete link;
+        }
+        if (op == "cp") {
+            canvas.toBlob(
+                (b) => {
+                    navigator.clipboard.write([
+                        new ClipboardItem({
+                            "image/png": b,
+                        })
+                    ]);
+                },
+                "image/png",
+            );
+        }
+    }
+</script>
+
+<div class="center">
+    <p>This is a little tool to create speech bubble memes, it's a bit shitty but does the job sometimes - at least it's configurable tho</p>
+    <input type="file" id="fileinput" onchange="onSelectImage.bind(this)()"  accept="image/*">
+    <div id="params"></div>
+    <button type="button" onclick="doExport('dl')">Download</button>
+    <button type="button" onclick="doExport('cp')">Copy to clipboard</button>
+    <br>
+    <canvas id="preview" style="border: 2px solid grey; height: auto; max-width: 100%; margin-top: 1.5rem"></canvas>
+</div>
