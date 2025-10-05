@@ -120,8 +120,6 @@ class SpeechBubbleThingy {
         // second half of ellipse
         ctx.ellipse(elcx, elcy, elxr, elyr, elr, a2, elea);
 
-        ctx.closePath();
-
         // erase below to achieve transparent output (instead of drawing transparent on top..)
         ctx.save();
         ctx.globalCompositeOperation = "destination-out";
