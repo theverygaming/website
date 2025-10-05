@@ -8,19 +8,47 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }: { } // flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = import nixpkgs {
-        inherit system;
-      };
-    in
+  outputs =
     {
-      devShells.default = pkgs.stdenv.mkDerivation {
-        name = "website";
-        buildInputs = with pkgs; [
-          jekyll
-          rubyPackages.jekyll-feed
-        ];
-      };
-    });
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    { }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+      in
+      {
+        devShells.default = pkgs.stdenv.mkDerivation {
+          name = "website";
+          buildInputs = with pkgs; [
+            jekyll
+            rubyPackages.jekyll-feed
+          ];
+        };
+        packages.theverygaming-website = pkgs.stdenv.mkDerivation rec {
+          pname = "website-built";
+          version = "45e4cfa8c71d61fe0b4fd78b5f327822f120a4f5";
+
+          src = ./.;
+
+          nativeBuildInputs = [
+            pkgs.jekyll
+            pkgs.rubyPackages.jekyll-feed
+          ];
+
+          buildPhase = ''
+            jekyll build
+          '';
+
+          installPhase = ''
+            cp -r _site $out
+          '';
+        };
+      }
+    );
 }
