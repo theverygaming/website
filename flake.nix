@@ -24,8 +24,7 @@
       in
       rec {
         packages.theverygaming-website = pkgs.stdenvNoCC.mkDerivation rec {
-          pname = "website";
-          version = if builtins.hasAttr "rev" self then self.rev else self.dirtyRev;
+          name = "website";
 
           src = self;
 
@@ -37,7 +36,7 @@
           buildPhase = ''
             cat << EOF > _data/buildinfo.yml
             nix_store_path: "$out"
-            commit: "${version}"
+            commit: "${if builtins.hasAttr "rev" self then self.rev else self.dirtyRev}"
             EOF
             jekyll build
           '';
