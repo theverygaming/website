@@ -23,7 +23,7 @@
         };
       in
       rec {
-        packages.theverygaming-website = pkgs.stdenv.mkDerivation rec {
+        packages.theverygaming-website = pkgs.stdenvNoCC.mkDerivation rec {
           pname = "website";
           version = if builtins.hasAttr "rev" self then self.rev else self.dirtyRev;
 
