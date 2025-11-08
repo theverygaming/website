@@ -22,32 +22,33 @@
           inherit system;
         };
       in
-      {
-        devShells.default = pkgs.stdenv.mkDerivation {
-          name = "website";
-          buildInputs = with pkgs; [
+      rec {
+        packages.theverygaming-website = pkgs.stdenv.mkDerivation rec {
+          pname = "website";
+          version = if builtins.hasAttr "rev" self then self.rev else self.dirtyRev;
+
+          src = self;
+
+          nativeBuildInputs = with pkgs; [
             jekyll
             rubyPackages.jekyll-feed
           ];
-        };
-        packages.theverygaming-website = pkgs.stdenv.mkDerivation rec {
-          pname = "website-built";
-          version = "45e4cfa8c71d61fe0b4fd78b5f327822f120a4f5";
-
-          src = ./.;
-
-          nativeBuildInputs = [
-            pkgs.jekyll
-            pkgs.rubyPackages.jekyll-feed
-          ];
 
           buildPhase = ''
+            cat << EOF > _data/buildinfo.yml
+            nix_store_path: "$out"
+            commit: "${version}"
+            EOF
             jekyll build
           '';
 
           installPhase = ''
             cp -r _site $out
           '';
+        };
+        devShells.default = pkgs.stdenv.mkDerivation {
+          name = "website";
+          buildInputs = packages.theverygaming-website.nativeBuildInputs;
         };
       }
     );
