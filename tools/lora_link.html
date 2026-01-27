@@ -1,0 +1,186 @@
+---
+title: LoRa link calculator
+layout: page
+nonav: True
+---
+
+<script src="/assets/lora_link/lora_link.js"></script>
+
+<script>
+    function set_result(data) {
+        const fields = [
+            "rx_noise_floor",
+            "rx_sensitivity",
+            "link_budget",
+            "link_loss",
+            "link_margin",
+            "expected_snr",
+            "expected_rssi",
+        ];
+        for (const field of fields) {
+            let style = "";
+            let val = "?";
+            if (data[field] !== undefined) {
+                val = data[field].toFixed(2);
+
+                if (field == "link_margin") {
+                    if (data[field] < 0) {
+                        style = "color: red;"
+                    } else {
+                        style = "color: green;"
+                    }
+                }
+            }
+            el = document.getElementById("res_" + field);
+            el.innerHTML = val;
+            el.style = style;
+        }
+    }
+
+    function get_values() {
+        const fields = [
+            "lora_bw",
+            "lora_sf",
+            "rx_nf",
+            "rx_ant_gain",
+            "rx_feed_loss",
+            "tx_pwr",
+            "tx_ant_gain",
+            "tx_feed_loss",
+            "path_loss",
+            "misc_loss",
+        ];
+        let res = {};
+        for (const field of fields) {
+            const parsed = parseFloat(document.getElementById(field).value);
+            if (!isNaN(parsed)) {
+                res[field] = parsed;
+            }
+        }
+        return res;
+    }
+
+    window.onload = function () {
+        set_result({});
+    }
+
+    function recalculate() {
+        let result = {};
+        const values = get_values();
+        function valuesSet(vals) {
+            for (const v of vals) {
+                if (values[v] === undefined) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        console.log(values);
+        
+        if (!valuesSet(["lora_bw", "rx_nf"])) {
+            return result;
+        }
+        result.rx_noise_floor = rx_noise_floor(values.lora_bw * 1000, values.rx_nf);
+        
+        if (!valuesSet(["lora_sf"])) {
+            return result;
+        }
+
+        result.rx_sensitivity = rx_sensitivity(values.lora_bw * 1000, values.rx_nf, values.lora_sf);
+
+        if (!valuesSet(["tx_pwr", "tx_ant_gain", "rx_ant_gain", "rx_feed_loss", "tx_feed_loss"])) {
+            return result;
+        }
+
+        const system_budget = ((values.tx_pwr + values.tx_ant_gain + values.rx_ant_gain) - (values.rx_feed_loss + values.tx_feed_loss));
+        result.link_budget = system_budget - result.rx_sensitivity;
+
+        if (!valuesSet(["path_loss", "misc_loss"])) {
+            return result;
+        }
+
+        result.link_loss = values.path_loss + values.misc_loss;
+        result.link_margin = result.link_budget - result.link_loss;
+        result.expected_snr = (system_budget - result.rx_noise_floor) - result.link_loss;
+        result.expected_rssi = system_budget - result.link_loss;
+
+        return result;
+    }
+
+    function onchange_fields() {
+        set_result(recalculate());
+    }
+</script>
+
+<div class="center">
+    <div>
+        <p><b>LoRa</b></p>
+        <label for="lora_bw">Bandwidth (kHz)</label>
+        <input type="number" id="lora_bw" onchange="onchange_fields()" list="lora_bw_list" min="0">
+        <datalist id="lora_bw_list">
+            <option>7.8125</option>
+            <option>15.625</option>
+            <option>31.25</option>
+            <option>62.5</option>
+            <option>125</option>
+            <option>250</option>
+            <option>500</option>
+        </datalist>
+        <br>
+        <label for="lora_sf">Spreading Factor</label>
+        <select id="lora_sf" onchange="onchange_fields()">
+            <option value="5">SF5</option>
+            <option value="6">SF6</option>
+            <option value="7">SF7</option>
+            <option value="8">SF8</option>
+            <option value="9">SF9</option>
+            <option value="10">SF10</option>
+            <option value="11">SF11</option>
+            <option value="12">SF12</option>
+        </select>
+    </div>
+
+    <div>
+        <p><b>Receiver</b></p>
+        <label for="rx_nf">Noise figure (dB)</label>
+        <input type="number" id="rx_nf" onchange="onchange_fields()" value="8" min="0">
+        <br>
+        <label for="rx_ant_gain">Antenna gain (dBi)</label>
+        <input type="number" id="rx_ant_gain" onchange="onchange_fields()" value="2.15" min="0">
+        <br>
+        <label for="rx_feed_loss">Feedline loss (dB)</label>
+        <input type="number" id="rx_feed_loss" onchange="onchange_fields()" value="0" min="0">
+    </div>
+
+    <div>
+        <p><b>Transmitter</b></p>
+        <label for="tx_pwr">Transmitter power (dBm)</label>
+        <input type="number" id="tx_pwr" onchange="onchange_fields()" value="0" min="0">
+        <br>
+        <label for="tx_ant_gain">Antenna gain (dBi)</label>
+        <input type="number" id="tx_ant_gain" onchange="onchange_fields()" value="2.15" min="0">
+        <br>
+        <label for="tx_feed_loss">Feedline loss (dB)</label>
+        <input type="number" id="tx_feed_loss" onchange="onchange_fields()" value="0" min="0">
+    </div>
+
+    <div>
+        <p><b>Path</b></p>
+        <label for="path_loss">Path loss (dB)</label>
+        <input type="number" id="path_loss" onchange="onchange_fields()" min="0">
+        <br>
+        <label for="misc_loss">Misc. loss (dB)</label>
+        <input type="number" id="misc_loss" onchange="onchange_fields()" value="0" min="0">
+    </div>
+
+    <div>
+        <p><b>Result</b></p>
+        <p>Receiver noise floor: <span id="res_rx_noise_floor"></span> dBm</p>
+        <p>Receiver sensitivity: <span id="res_rx_sensitivity"></span> dBm</p>
+        <p>Link Budget: <span id="res_link_budget"></span> dB</p>
+        <p>Link Loss: <span id="res_link_loss"></span> dB</p>
+        <p>Link Margin: <span id="res_link_margin"></span> dB</p>
+        <p>Expected SNR: <span id="res_expected_snr"></span> dB</p>
+        <p>Expected RSSI: <span id="res_expected_rssi"></span> dBm</p>
+    </div>
+</div>
