@@ -15,7 +15,3 @@
   boxicons-logo: bxl-youtube
 - platform: AniList
   url: https://anilist.co/user/theverygaming/animelist
-- platform: Twitter
-  username: "@theverygaming"
-  url: https://twitter.com/theverygaming
-  boxicons-logo: bxl-twitter
