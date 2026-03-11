@@ -5,4 +5,4 @@ permalink: /blog.html
 nav_order: 1
 ---
 
-I'll post something sometime™
+_btw there's an [atom feed](/feed.xml) that hopefully works :3_
