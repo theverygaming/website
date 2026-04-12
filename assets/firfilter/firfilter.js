@@ -166,7 +166,7 @@ class DSPFilterCalc {
         this.fir_window = document.getElementById("fir_window").value;
         this.fir_n_taps = parseInt(document.getElementById("fir_n_taps").value);
 
-        // FIXME: omg just use the sinc function. Also I think for the sinc the number of taps must be even
+        // FIXME: omg just use the sinc function. Also I think for the sinc the number of taps must be odd
 
         const n_taps_even = Math.floor(this.fir_n_taps / 2) * 2;
         const frequency_response_desired = Array.from({ length: n_taps_even }, (_, i) => {
