@@ -1,0 +1,46 @@
+---
+title: FIR filter calculator
+layout: page
+nonav: True
+---
+
+<script src="/assets/firfilter/firfilter.js" type="module"></script>
+
+<div class="center">
+    <div>
+        <p><b>System Parameters</b></p>
+        <label for="samplerate">Sampling rate</label>
+        <input type="number" id="samplerate" onchange="filtercalc.onchange_system_parameters()" value="48000" min="0">
+        <br>
+    </div>
+
+    <div>
+        <p><b>FIR parameters</b></p>
+        <label for="fir_window">Window</label>
+        <select id="fir_window" onchange="filtercalc.onchange_fircalc()">
+            <option value="rectangular">Rectangular</option>
+            <option value="blackman">Blackman</option>
+            <option value="hamming">Hamming</option>
+            <option value="hanning">Hanning</option>
+            <option value="kaiser">Kaiser</option>
+        </select>
+        <br>
+        <label for="fir_n_taps">Number of taps</label>
+        <input type="number" id="fir_n_taps" onchange="filtercalc.onchange_fircalc()" value="16" min="0" step="1">
+        <br>
+        <canvas id="frequency_response_desired"></canvas>
+    </div>
+
+    <div>
+        <p><b>FIR Taps</b></p>
+        <label for="fir_taps">FIR Taps (JSON)</label>
+        <input type="text" id="fir_taps" onchange="filtercalc.onchange_fir()" value="[0, 1, 1, 0]">
+        <br>
+    </div>
+
+    <div>
+        <p><b>Result</b></p>
+        <canvas id="impulse_response"></canvas>
+        <canvas id="frequency_response"></canvas>
+    </div>
+</div>

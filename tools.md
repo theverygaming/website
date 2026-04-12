@@ -7,3 +7,4 @@ nav_order: 3
 
 - [Speech bubble meme creator](/tools/speechbubble.html)
 - [LoRa link calculator](/tools/lora_link.html)
+- [FIR filter calculator](/tools/firfilter.html)
