@@ -20,15 +20,35 @@ nonav: True
         <select id="fir_window" onchange="filtercalc.onchange_fircalc()">
             <option value="rectangular">Rectangular</option>
             <option value="blackman">Blackman</option>
+            <option value="hann">Hann</option>
             <option value="hamming">Hamming</option>
-            <option value="hanning">Hanning</option>
-            <option value="kaiser">Kaiser</option>
+            <!-- TODO: kaiser window -->
         </select>
         <br>
         <label for="fir_n_taps">Number of taps</label>
-        <input type="number" id="fir_n_taps" onchange="filtercalc.onchange_fircalc()" value="16" min="0" step="1">
+        <input type="number" id="fir_n_taps" onchange="filtercalc.onchange_fircalc()" value="63" min="0" step="1">
         <br>
-        <canvas id="frequency_response_desired"></canvas>
+    </div>
+
+    <div>
+        <p><b>Filter parameters</b></p>
+        <label for="filter_type">Filter Type</label>
+        <select id="filter_type" onchange="filtercalc.onchange_fircalc()">
+            <option selected="selected" value="lowpass">Lowpass</option>
+            <option value="highpass">Highpass</option>
+            <option value="bandpass">Bandpass</option>
+            <option value="bandstop">Bandstop</option>
+        </select>
+        <br>
+        <label for="filter_f1">f1</label>
+        <input type="number" id="filter_f1" onchange="filtercalc.onchange_fircalc()" value="10000" min="0" step="1">
+        <br>
+        <label for="filter_f2" id="lbl_filter_f2">f2</label>
+        <input type="number" id="filter_f2" onchange="filtercalc.onchange_fircalc()" value="12000" min="0" step="1">
+        <br id="br_filter_f2">
+        <label for="filter_f0db">0dB gain frequency</label>
+        <input type="number" id="filter_f0db" onchange="filtercalc.onchange_fircalc()" value="5000" min="0" step="1">
+        <br>
     </div>
 
     <div>
@@ -40,7 +60,7 @@ nonav: True
 
     <div>
         <p><b>Result</b></p>
-        <canvas id="impulse_response"></canvas>
         <canvas id="frequency_response"></canvas>
+        <canvas id="impulse_response"></canvas>
     </div>
 </div>

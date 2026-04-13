@@ -1,6 +1,6 @@
 "use strict";
 import Chart from "https://esm.sh/chart.js@4.5.1/auto";
-import { fft, idft, util as fftUtil } from "https://esm.sh/fft-js@0.0.12";
+import { fft, dft, util as fftUtil } from "https://esm.sh/fft-js@0.0.12";
 
 // meh, probably a better solution out there but who cares tehee
 const _existing_chart_map = {};
@@ -72,18 +72,40 @@ function fftMag2dB(fft_mag, ) {
     });
 }
 
+function windowBlackman(length, alpha = 0.16) {
+    const a0 = (1.0 - alpha) / 2.0;
+    const a2 = alpha / 2.0;
+    return Array.from({ length }, (_, i) => {
+        return a0 - (0.5 * Math.cos(2.0 * Math.PI * (i / length))) + (a2 * Math.cos(4.0 * Math.PI * (i / length)));
+    });
+}
+
+function windowHann(length, a0 = 0.5, a1 = -0.5) {
+    return Array.from({ length }, (_, i) => {
+        // https://www.sciencedirect.com/topics/engineering/hamming-window
+        const x = i - (length / 2);
+        return 0.5 + (1 - 0.5) * Math.cos(((2 * Math.PI) / length) * x);
+    });
+}
+
+function windowHamming(length, a0 = 0.5, a1 = -0.5) {
+    return Array.from({ length }, (_, i) => {
+        // https://www.sciencedirect.com/topics/engineering/hamming-window
+        const x = i - (length / 2);
+        return 0.54 + 0.46 * Math.cos(((2 * Math.PI) / length) * x);
+    });
+}
+
 function getWindow(name, length) {
     switch (name) {
         case "rectangular":
             return new Array(length).fill(1);
         case "blackman":
-            const alpha = 0.16;
-            const a0 = (1.0 - alpha) / 2.0;
-            const a2 = alpha / 2.0;
-            return Array.from({ length }, (_, i) => {
-                return a0 - (0.5 * Math.cos(2.0 * Math.PI * (i / length))) + (a2 * Math.cos(4.0 * Math.PI * (i / length)));
-            });
-        // FIXME: implement more windows
+            return windowBlackman(length);
+        case "hann":
+            return windowHann(length);
+        case "hamming":
+            return windowHamming(length);
         default:
             throw new Error(`unknown window '${name}'`);
     }
@@ -94,19 +116,44 @@ function applyWindow(name, data) {
     return data.map((x, i) => x * w[i]);
 }
 
+function sinc(x) {
+    if (x == 0) {
+        return 1;
+    }
+    const xn = x * Math.PI;
+    return Math.sin(xn) / xn;
+}
+
+function sinc_lp(t, f) {
+    return 2 * f * sinc(2 * f * t);
+}
+
+function sinc_hp(t, f) {
+    const transparent = t == 0 ? 1 : 0;
+    return transparent - sinc_lp(t, f);
+}
+
+function sinc_bp(t, fl, fh) {
+    return sinc_lp(t, fh) - sinc_lp(t, fl);
+}
+
+function sinc_bs(t, fl, fh) {
+    return sinc_lp(t, fl) + sinc_hp(t, fh);
+}
+
 class DSPFilterCalc {
     constructor() {
         this.samplerate = 0;
 
-        this.chart_frequency_response_desired = new Chart(
-            document.getElementById("frequency_response_desired"),
+        this.chart_frequency_response = new Chart(
+            document.getElementById("frequency_response"),
             {
                 type: "line",
                 data: {
                     labels: [],
                     datasets: [
                         {
-                            label: "frequency response (desired)",
+                            label: "frequency response (dB)",
                             data: [],
                             fill: false,
                             borderColor: "purple",
@@ -135,24 +182,6 @@ class DSPFilterCalc {
                 },
             },
         );
-        this.chart_frequency_response = new Chart(
-            document.getElementById("frequency_response"),
-            {
-                type: "line",
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: "frequency response (dB)",
-                            data: [],
-                            fill: false,
-                            borderColor: "purple",
-                            tension: 0.1
-                        },
-                    ],
-                },
-            },
-        );
 
         this.onchange_system_parameters();
     }
@@ -166,43 +195,68 @@ class DSPFilterCalc {
         this.fir_window = document.getElementById("fir_window").value;
         this.fir_n_taps = parseInt(document.getElementById("fir_n_taps").value);
 
-        // FIXME: omg just use the sinc function. Also I think for the sinc the number of taps must be odd
+        this.filter_type = document.getElementById("filter_type").value;
+        this.filter_f1 = parseFloat(document.getElementById("filter_f1").value);
+        this.filter_f2 = parseFloat(document.getElementById("filter_f2").value);
+        this.filter_f0db = parseFloat(document.getElementById("filter_f0db").value);
 
-        const n_taps_even = Math.floor(this.fir_n_taps / 2) * 2;
-        const frequency_response_desired = Array.from({ length: n_taps_even }, (_, i) => {
-            if (i >= n_taps_even / 2) {
-                return 0;
+        switch (this.filter_type) {
+            case "lowpass":
+            case "highpass":
+                document.getElementById("filter_f2").style.display = "none";
+                document.getElementById("lbl_filter_f2").style.display = "none";
+                document.getElementById("br_filter_f2").style.display = "none";
+                break;
+            case "bandpass":
+            case "bandstop":
+                document.getElementById("filter_f2").style.display = "";
+                document.getElementById("lbl_filter_f2").style.display = "";
+                document.getElementById("br_filter_f2").style.display = "";
+                break;
+        }
+
+        const n_taps_odd = this.fir_n_taps % 2 == 0 ? this.fir_n_taps + 1 : this.fir_n_taps;
+
+        const impulse_response_raw = Array.from({ length: n_taps_odd }, (_, i) => {
+            const t = i - Math.floor(n_taps_odd / 2);
+            const f1 = this.filter_f1 / this.samplerate;
+            const f2 = this.filter_f2 / this.samplerate;
+            switch (this.filter_type) {
+                case "lowpass":
+                    return sinc_lp(t, f1);
+                case "highpass":
+                    return sinc_hp(t, f1);
+                case "bandpass":
+                    return sinc_bp(t, f1, f2);
+                case "bandstop":
+                    return sinc_bs(t, f1, f2);
             }
-            return 1;
         });
 
-        this.chart_frequency_response_desired.data.labels = Array.from({ length: n_taps_even }, (_, i) => {
-            return (this.samplerate / 2) * (i / n_taps_even);
-        });
-        this.chart_frequency_response_desired.data.datasets[0].data = frequency_response_desired;
-        this.chart_frequency_response_desired.update();
+        const impulse_response = applyWindow(this.fir_window, impulse_response_raw).map(x => Math.min(Math.max(x, -1), 1));
 
-        const impulse_response_half = fftUtil.fftMag(idft(frequency_response_desired.map(x => [x, 0])));
-        const impulse_response = applyWindow(this.fir_window, [
-            ...[...impulse_response_half].reverse(),
-            ...impulse_response_half.slice(1),
-        ]).map(x => Math.min(Math.max(x, 0), 1));
+        // https://www.wavewalkerdsp.com/2022/02/23/designing-fir-filter-gain/
+        // "Normalizing a filter to unit gain at some frequency is as simple as
+        // dividing the filter weights by the magnitude of the discrete-time Fourier transform (DTFT)"
+        const gain_div = fftUtil.fftMag(dft(impulse_response))[Math.round((impulse_response.length * this.filter_f0db) / this.samplerate)];
 
-        document.getElementById("fir_taps").value = JSON.stringify(impulse_response);
+        const impulse_response_normalized = impulse_response.map(x => x / gain_div);
+
+        document.getElementById("fir_taps").value = JSON.stringify(impulse_response_normalized);
         this.onchange_fir();
     }
 
     onchange_fir() {
         const taps = JSON.parse(document.getElementById("fir_taps").value);
 
-        this.chart_impulse_response.data.labels = Array.from(taps.keys());
-        this.chart_impulse_response.data.datasets[0].data = taps;
-        this.chart_impulse_response.update();
-
-        const resp_phasors = fft(zeroPadArrToPowerOfTwo(taps, 200));
+        const resp_phasors = fft(zeroPadArrToPowerOfTwo(taps, 400));
         this.chart_frequency_response.data.labels = fftUtil.fftFreq(resp_phasors, this.samplerate);
         this.chart_frequency_response.data.datasets[0].data = fftMag2dB(fftUtil.fftMag(resp_phasors));
         this.chart_frequency_response.update();
+
+        this.chart_impulse_response.data.labels = Array.from(taps.keys());
+        this.chart_impulse_response.data.datasets[0].data = taps;
+        this.chart_impulse_response.update();
     }
 };
 
