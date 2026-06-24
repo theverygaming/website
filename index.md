@@ -8,7 +8,7 @@ Hi hello! People usually call me M [(pronounced /'ɛm/)](https://en.wikipedia.or
 
 I do lots of silly things in my free time :3 - I mainly dabble with computers, do radio stuff, and some electronics (although I'm terrible at electronics).
 
-### Interests:
+## Interests:
 - **Computer stuff in general**
   - Older computers sometimes
   - Linux of course :3 <!-- TODO: linux journey blogpost sometime maybe -->
