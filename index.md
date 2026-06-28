@@ -29,7 +29,7 @@ I do lots of silly things in my free time :3 - I mainly dabble with computers, d
 - **Electronics**
   - I make attempts at building circuits sometimes
 
-Sometimes I play games too (usually whenever everything else gets boring or exhausting), like 90% of the time it's Counter-Strike 2 though. And I'm not even good at it (Wingman Silver 4).
+Sometimes I play games too (usually whenever everything else gets boring or exhausting), like 90% of the time it's Counter-Strike 2 though. [And I'm not even good at it (Silver)](https://www.youtube.com/watch?v=59lU0s0mByc).
 
 Also even more rarely I watch Anime :3
 
