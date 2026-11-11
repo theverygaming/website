@@ -44,7 +44,7 @@ nonav: True
             computer.serialIn(str);
         });
 
-        const computer = new funnyarchComputer(romArray, new Uint8Array(4096), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"));
+        const computer = new funnyarchComputer(romArray, new Uint8Array(16384), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"));
         computer_ref = computer;
 
         runner_ref = new animationFrameCompute(
