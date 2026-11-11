@@ -13,11 +13,46 @@ nonav: True
         createParamInputs();
     }
 
+    // Source - https://stackoverflow.com/a/51586232
+    // Posted by Emanuel
+    // Retrieved 2026-11-11, License - CC BY-SA 4.0
+    window.addEventListener("paste", (ev) => {
+        let items = (ev.clipboardData || ev.originalEvent.clipboardData).items;
+        for (index in items) {
+            let item = items[index];
+            if (item.kind === "file") {
+                let blob = item.getAsFile();
+                let reader = new FileReader();
+                reader.onload = (ev) => {
+                    addImage(ev.target.result);
+                };
+                reader.readAsDataURL(blob);
+            }
+        }
+    })
+
     function onSelectImage() {
         if (this.files.length != 1) {
             return;
         }
-        speechbubble.loadImage(URL.createObjectURL(this.files[0]), () => {
+        addImage(URL.createObjectURL(this.files[0]));
+    }
+
+    async function pasteFromClipboard() {
+        const clipboardItems = await navigator.clipboard.read();
+        for (const clipboardItem of clipboardItems) {
+            for (const type of clipboardItem.types) {
+                if (!type.startsWith("image/")) {
+                    continue;
+                }
+                const blob = await clipboardItem.getType(type);
+                addImage(URL.createObjectURL(blob));
+            }
+        }
+    }
+
+    function addImage(dataurl) {
+        speechbubble.loadImage(dataurl, () => {
             createParamInputs();
         });
     }
@@ -88,7 +123,12 @@ nonav: True
 
 <div class="center">
     <p>This is a little tool to create speech bubble memes, it's a bit shitty but does the job sometimes - at least it's configurable tho</p>
-    <input type="file" id="fileinput" onchange="onSelectImage.bind(this)()"  accept="image/*">
+    <p>You can simply paste an image with e.g. CTRL+V</p>
+    <div style="margin-bottom: 1em;">
+        <button type="button" onclick="pasteFromClipboard()">Paste from clipboard</button>
+        or
+        <input type="file" id="fileinput" onchange="onSelectImage.bind(this)()" accept="image/*">
+    </div>
     <div id="params"></div>
     <button type="button" onclick="doExport('dl')">Download</button>
     <button type="button" onclick="doExport('cp')">Copy to clipboard</button>
