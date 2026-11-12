@@ -17,13 +17,15 @@ nonav: True
 
 <p>Try writing some pixels to the screen with the machine code monitor! The 1bpp framebuffer is located at 0xF0000000 and has a resolution of 640x480 pixels.</p>
 
+<p>You can also try out the vix kernel running in this emulator! Select the BIOS ROM and the vix HDD! Note that it may take a while to boot.</p>
+
 <script>
     let serialcon_ref = null;
     let computer_ref = null;
     let runner_ref = null;
     let init_done = true;
 
-    function reinit_computer(romArray) {
+    function reinit_computer(romArray, hddArray) {
         if (!init_done) {
             return;
         }
@@ -44,7 +46,7 @@ nonav: True
             computer.serialIn(str);
         });
 
-        const computer = new funnyarchComputer(romArray, new Uint8Array(16384), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"));
+        const computer = new funnyarchComputer(romArray, new Uint8Array(1048576), serialcon_ref.addText.bind(serialcon_ref), document.getElementById("screen"), hddArray);
         computer_ref = computer;
 
         runner_ref = new animationFrameCompute(
@@ -62,13 +64,17 @@ nonav: True
         });
     }
 
+    let loaded_rom = null;
+    let loaded_hdd = null;
+
     window.onload = function () {
         fetch('/assets/funnyarch/roms/monitor.bin')
             .then(response => response.arrayBuffer())
             .then((rawdata) => {
                 let rom = new Uint8Array(8192);
                 rom.set(new Uint8Array(rawdata));
-                reinit_computer(rom);
+                loaded_rom = rom;
+                reinit_computer(loaded_rom, loaded_hdd);
             }
         );
     }
@@ -79,7 +85,8 @@ nonav: True
             .then((rawdata) => {
                 let rom = new Uint8Array(8192);
                 rom.set(new Uint8Array(rawdata));
-                reinit_computer(rom);
+                loaded_rom = rom;
+                reinit_computer(loaded_rom, loaded_hdd);
             }
         );
     }
@@ -97,7 +104,41 @@ nonav: True
             }
             let rom = new Uint8Array(8192);
             rom.set(new Uint8Array(arrU8));
-            reinit_computer(rom);
+            loaded_rom = rom;
+            reinit_computer(loaded_rom, loaded_hdd);
+        };
+        reader.readAsArrayBuffer(this.files[0]);
+    }
+
+    function load_hdd(filepath) {
+        if (filepath == "") {
+            loaded_hdd = null;
+            reinit_computer(loaded_rom, loaded_hdd);
+            return;
+        }
+        fetch(filepath)
+            .then(response => response.arrayBuffer())
+            .then((rawdata) => {
+                arrU8 = new Uint8Array(rawdata);
+                let hdd = new Uint8Array((arrU8.length + 511) & ~511);
+                hdd.set(new Uint8Array(arrU8));
+                loaded_hdd = hdd;
+                reinit_computer(loaded_rom, loaded_hdd);
+            }
+        );
+    }
+
+    function hdd_file_selected() {
+        if (!this.files.length) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function() {
+            arrU8 = new Uint8Array(this.result);
+            let hdd = new Uint8Array((arrU8.length + 511) & ~511);
+            hdd.set(new Uint8Array(arrU8));
+            loaded_hdd = hdd;
+            reinit_computer(loaded_rom, loaded_hdd);
         };
         reader.readAsArrayBuffer(this.files[0]);
     }
@@ -107,15 +148,27 @@ nonav: True
     <button onclick="computer_ref.cpu.reset()">Reset CPU</button>
     <br>
 
-    <label for="roms_select">ROM: </label>
-    <select id="roms_select" onchange="load_rom(this.value)">
-        <option selected="selected" value="/assets/funnyarch/roms/monitor.bin">Machine Code Monitor</option>
-        <option value="/assets/funnyarch/roms/testsuite.bin">Test Suite</option>
-        <option value="/assets/funnyarch/roms/mandelbrot.bin">Mandelbrot (slow)</option>
-        <option value="/assets/funnyarch/roms/bios.bin">BIOS (no HDD, can't boot from it)</option>
-    </select>
-    <label for="roms_file_upload">or upload a ROM file</label>
-    <input id="roms_file_upload" type="file" onchange="rom_file_selected.bind(this)()"/>
+    <div style="margin-bottom: 1em;">
+        <label for="roms_select">ROM: </label>
+        <select id="roms_select" onchange="load_rom(this.value)">
+            <option selected="selected" value="/assets/funnyarch/roms/monitor.bin">Machine Code Monitor</option>
+            <option value="/assets/funnyarch/roms/testsuite.bin">Test Suite</option>
+            <option value="/assets/funnyarch/roms/mandelbrot.bin">Mandelbrot (slow)</option>
+            <option value="/assets/funnyarch/roms/bios.bin">BIOS (no HDD, can't boot from it)</option>
+        </select>
+        <label for="roms_file_upload">or upload a ROM file</label>
+        <input id="roms_file_upload" type="file" onchange="rom_file_selected.bind(this)()"/>
+    </div>
+
+    <div>
+        <label for="hdds_select">HDD: </label>
+        <select id="hdds_select" onchange="load_hdd(this.value)">
+            <option selected="selected" value="">Select...</option>
+            <option value="/assets/funnyarch/hdds/vix.img">vix (BIOS Bootable)</option>
+        </select>
+        <label for="hdds_file_upload">or upload a HDD file</label>
+        <input id="hdds_file_upload" type="file" onchange="hdd_file_selected.bind(this)()"/>
+    </div>
 
     <h3>Serial console</h3>
     <textarea id="serialTextArea"
